@@ -18,12 +18,22 @@ function setTodos(todos) {
 }
 
 function getTodos() {
-  let todoJson = localStorage.getItem("todos"); // Récupérer le contenu de la clé "todos" dans le localStorage
+  let todoJson = localStorage.getItem("todos"); // Récupération du contenu de la clé "todos" dans le localStorage
   return JSON.parse(todoJson); // Convertir la donnée JSON en donnée javascript
 }
 
-document.querySelector("form").addEventListener("submit", function(event) {
-  let newTodoTitle = document.querySelector("form input[name=title]").value;
-  let newTodoDescription = document.querySelector("form input[name=description]").value;
-  event.preventDefault();
+let form = document.querySelector("form"); // Récupération du formulaire dans le DOM
+
+form.addEventListener("submit", function(event) {
+
+  let newTodo = {
+    title: document.querySelector("form input[name=title]").value, // on créé l'objet todo à partir des données du formulaire
+    description: document.querySelector("form input[name=description]").value,
+    isDone: false // un todo n'est pas terminé lorsqu'il est créé
+  };
+
+  event.preventDefault(); // on stoppe le comportement par défaut du submit
+  form.reset(); // comme le submit ne vide plus le formulaire, on le vide à la main
+
+  console.log(newTodo);
 });
