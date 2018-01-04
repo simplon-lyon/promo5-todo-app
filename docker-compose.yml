@@ -1,0 +1,9 @@
+version: "3.1"
+services:
+  nginx:
+    image: nginx
+    volumes: 
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./www:/var/www/default:ro
+    ports:
+      - "80:80"
