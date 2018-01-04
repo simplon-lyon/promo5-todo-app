@@ -1,0 +1,20 @@
+ul {
+  list-style: none;
+  padding: 0;
+  width: 300px;
+}
+
+li {
+  border: 1px dashed black;
+  display: flex;
+  justify-content: space-around;
+}
+
+form input[type=text] {
+  width: 300px;
+  display: block;
+}
+
+form input:not([type=text]) {
+  width: 150px;
+}
