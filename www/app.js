@@ -45,7 +45,7 @@ function deleteTodo() {
 
   for (let index = 0; index < todoList.length; index++) {
     if (todoList[index].isDone) {
-      todoList.splice(index,0);
+      todoList.splice(index,1);
       index--;
     }
   }
