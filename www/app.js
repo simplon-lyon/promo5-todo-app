@@ -1,13 +1,17 @@
 "use strict"; // on active le mode strict de javascript https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode
 
 function saveTodoList(todoList) {
-  let todoListJson = JSON.stringify(todoList);    // Convertir la donnée en string (JSON)
-  localStorage.setItem("todoList", todoListJson); // Enregistrer la donnée convertie dans le localStorage
+  // Convertir la donnée en string (JSON)
+  let todoListJson = JSON.stringify(todoList);
+  // Enregistrer la donnée convertie dans le localStorage
+  localStorage.setItem("todoList", todoListJson);
 }
 
 function getTodoList() {
-  let todoJson = localStorage.getItem("todoList"); // Récupération du contenu de la clé "todoList" dans le localStorage
-  let todoList = JSON.parse(todoJson); // Convertir la donnée JSON en donnée javascript
+  // Récupération du contenu de la clé "todoList" dans le localStorage
+  let todoJson = localStorage.getItem("todoList");
+  // Convertir la donnée JSON en donnée javascript
+  let todoList = JSON.parse(todoJson);
   // si le localStorage est vide, alors notre todoList est un tableau vide
   if (!todoList) {
     todoList = [];
@@ -32,25 +36,29 @@ function addTodo(title, description) {
 }
 
 function checkTodo(index) {
+  // on récupère la todo list
   let todoList = getTodoList();
-
+  // on inverse la propriété isDone du todo de rang index dans todoList
   todoList[index]["isDone"] = !todoList[index]["isDone"];
-  console.log(todoList[index]["isDone"]);
-  
+  // on sauvegarde la todo list modifiée dans le localStorage
   saveTodoList(todoList);
 }
 
 function deleteTodo() {
+  // on récupère la todo list
   let todoList = getTodoList();
-
+  // pour chaque todo de notre todo list
   for (let index = 0; index < todoList.length; index++) {
+    // si la propriété isDone est vraie, on retire le todo du tableau
     if (todoList[index].isDone) {
       todoList.splice(index,1);
+      // /!\ lorsqu'on retire un todo du tableau, on décrémente l'index pour ne pas sauter d'élément
       index--;
     }
   }
-
+  // on sauvegarde la todo list modifiée dans le localStorage
   saveTodoList(todoList);
+  // et on met à jour l'affichage
   updateDisplay();
 }
 
@@ -71,7 +79,10 @@ function updateDisplay() {
     let checkbox = document.createElement("input");
     // on précise que l'input est une checkbox en ajoutant l'attribut type="checkbox" sur l'input
     checkbox.setAttribute("type", "checkbox");
-    //
+    // on ajoute l'événement "onchange" dans le layout.
+    // L'appel de la fonction checkTodo() se fait dans le HTML, c'est pour cela qu'on cherche à éviter au maximum
+    // de créer des événments dans le HTML : le code est morcelé dans plusieurs fichiers...
+    // On passe l'index en paramètre de la fonction checkTodo() afin de retrouver le todo à "checker"
     checkbox.setAttribute("onchange", "checkTodo(" + index + ")");
     // si le todo est fini (isDone === true) alors on ajoute l'attribut checked à notre checkbox
     if (todo.isDone) {
@@ -90,24 +101,26 @@ function updateDisplay() {
     div.appendChild(p);
   });
 }
-
-let form = document.querySelector("form"); // Récupération du formulaire dans le DOM
-
+// Récupération du formulaire dans le DOM
+let form = document.querySelector("form");
+// On ajoute un écouteur d'évenement sur l'évenement "submit" du form
 form.addEventListener("submit", function(event) {
-
+  // On récupère la valeur des inputs contenant le titre et la descritption du todo
   let title = document.querySelector("form input[name=title]").value;
   let description = document.querySelector("form input[name=description]").value;
-
-  event.preventDefault(); // on stoppe le comportement par défaut du submit
-  form.reset(); // comme le submit ne vide plus le formulaire, on le vide à la main
+  // on stoppe le comportement par défaut du submit
+  event.preventDefault();
+  // comme le submit ne vide plus le formulaire, on le vide à la main
+  form.reset();
   // on ajoute le todo à la todo list dans le localStorage
   addTodo(title, description);
 
 });
-
+// Récupèration du bouton de suppression dans le DOM
 let deleteButton = document.querySelector("input[type=button]");
-
+// On ajoute un écouteur d'événement sur l'événement "click" du bouton
 deleteButton.addEventListener("click", function(event) {
+  // on supprime les todos qui ont isDone à true
   deleteTodo();
 });
 
